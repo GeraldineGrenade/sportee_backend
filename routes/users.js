@@ -19,9 +19,12 @@ router.get('/', (req, res)=> {
 
 
 // GET to verify if username is already present in DB
-router.get('/checkUsername:username', (req, res) => {
+router.get('/checkUsername/:username', (req, res) => {
+  console.log('route percutée')
   User.findOne({username : req.params.username})
-  .then(data => data === null ? res.json({result : true}) : res.json({result : false}))
+  .then(data => {
+    data === null ? res.json({result : true}) : res.json({result : false})
+  })
 });
 
 // Register new user in DB
