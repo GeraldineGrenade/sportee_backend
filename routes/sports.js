@@ -14,7 +14,6 @@ router.get('/', (req, res) => {
 router.get('/:search', (req, res) => {
     Sport.find({name : new RegExp(req.params.search+'+', "gi")})
         .then(data => data ? res.json({result : true, sports : data}) : res.json({result : false}))
-
     });
 
 module.exports = router;
