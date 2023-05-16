@@ -25,7 +25,6 @@ const userSchema = mongoose.Schema({
 });
 
 
-const Preference = mongoose.model ('preferences', preferenceSchema);
 const User = mongoose.model('users', userSchema);
 
-module.exports = {User, Preference}
+module.exports = User
