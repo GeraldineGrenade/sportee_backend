@@ -23,7 +23,7 @@ const participantSchema = mongoose.Schema({
 });
 
 
-const activiteSchema = mongoose.Schema[{
+const activitySchema = mongoose.Schema[{
     name: String,
     sport: {type: mongoose.Schema.Types.ObjectId, ref: 'sports'},
     description: String,
@@ -42,7 +42,7 @@ const activiteSchema = mongoose.Schema[{
 
 const Conversation = mongoose.model('conversations', conversationSchema);
 const Message = mongoose.model('messages', messageSchema);
-const Activity = mongoose.model('activities', activiteSchema);
+const Activity = mongoose.model('activities', activitySchema);
 const Place = mongoose.model('places', placeSchema);
 const Participant = mongoose.model('participants', participantSchema);
 
