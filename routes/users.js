@@ -22,6 +22,7 @@ router.get('/', (req, res)=> {
 router.get('/checkUsername/:username', (req, res) => {
 User.findOne({username : req.params.username})
   .then(data => {
+    console.log('data in back ---', data)
     data === null ? res.json({result : true}) : res.json({result : false})
   })
 });
