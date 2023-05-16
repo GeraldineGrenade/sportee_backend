@@ -60,6 +60,12 @@ router.post('/', async (req, res) => {
   try {
     const { family_name, given_name, email } = req.body.userInfo
 
+    const existingUser = await User.findOne({ email })
+
+    if (existingUser) {
+      return res.json({ message: 'L\'utilisateur existe déjà !' })
+    }
+
     const user = new User({
       lastname: family_name,
       firstname: given_name,
