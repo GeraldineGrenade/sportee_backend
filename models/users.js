@@ -5,8 +5,8 @@ const mongoose =  require('mongoose');
 const preferenceSchema = mongoose.Schema({
 
     level: String,
-    sport:[{ type: mongoose.Schema.Types.ObjectId, ref: 'Sports'}],
-    habitude: [String],
+    sports:[{ type: mongoose.Schema.Types.ObjectId, ref: 'sports'}],
+    habits: [String],
 });
 
 const userSchema = mongoose.Schema({
@@ -20,8 +20,8 @@ const userSchema = mongoose.Schema({
     avatar: String,
     token: String,
     description: String,
-    preference : preferenceSchema,
-    badge : [{type: mongoose.Schema.Types.ObjectId, ref: 'Badges'}]
+    preferences : preferenceSchema,
+    badges : [{type: mongoose.Schema.Types.ObjectId, ref: 'badges'}]
 });
 
 
