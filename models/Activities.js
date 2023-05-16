@@ -38,12 +38,7 @@ const activitySchema = mongoose.Schema[{
 }];
 
 
-
-
-const Conversation = mongoose.model('conversations', conversationSchema);
-const Message = mongoose.model('messages', messageSchema);
 const Activity = mongoose.model('activities', activitySchema);
-const Place = mongoose.model('places', placeSchema);
-const Participant = mongoose.model('participants', participantSchema);
 
-module.exports = {Activity, Place, Participant, Conversation, Message};
+
+module.exports = Activity;
