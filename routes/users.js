@@ -6,11 +6,11 @@ require('../models/connection');
 const User = require('../models/users');
 
 //test route post 
-router.post('/', (req, res) => {
-  // User.push(req.body.newUser)
-  res.json({ userList: User })
+// router.post('/', (req, res) => {
+//   // User.push(req.body.newUser)
+//   res.json({ userList: User })
 
-})
+// })
 
 //test route get
 router.get('/', (req, res) => {
