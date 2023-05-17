@@ -1,4 +1,5 @@
 require('dotenv').config()
+require('./models/connection');
 var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
@@ -6,6 +7,7 @@ var logger = require('morgan');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+const activitiesRouter= require('./routes/activities')
 const sportsRouter = require('./routes/sports')
 
 var app = express();
@@ -22,5 +24,5 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/sports', sportsRouter);
-
+app.use('/activities', activitiesRouter)
 module.exports = app;
