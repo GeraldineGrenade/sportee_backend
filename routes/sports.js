@@ -10,7 +10,7 @@ router.get('/', (req, res) => {
       .then(data => data ? res.json({result : true, sports : data}) : res.json({result : false}))
     });
 
-// GET sports according to search
+// GET sports according to search /!\ ADAPT REGEX TO AVOID SPECIAL CARACTERS(éàè)
 router.get('/:search', (req, res) => {
     Sport.find({name : new RegExp(req.params.search+'+', "gi")})
         .then(data => data ? res.json({result : true, sports : data}) : res.json({result : false}))
