@@ -25,27 +25,30 @@ router.get('/checkEmail/:email', (req, res) => {
 
 //Signup route - register new user in DB
 router.post('/signup', (req, res) => {
-  const { avatar, dateOfBirth, email, firstname, lastname, password, phone, preferences, username } = req.body
-  const newUser = new User({
-    lastname,
-    firstname,
-    email,
-    password: bcrypt.hashSync(password, 10),
-    phone,
-    username,
-    dateOfBirth,
-    avatar,
-    token: uid2(32),
-    description: '',
-    preferences: preferences,
-    badges: []
-  });
+  try {
 
-  res.json({savedUser : newUser})
+    const { avatar, dateOfBirth, email, firstname, lastname, password, phone, preferences, username } = req.body
+    const newUser = new User({
+      lastname,
+      firstname,
+      email,
+      password: bcrypt.hashSync(password, 10),
+      phone,
+      username,
+      avatar,
+      token: uid2(32),
+      preferences: preferences,
+      badges: []
+    });
 
-  // newUser.save().then(newDoc => {
-  //   res.json({ result: true, token: newDoc.token });
-  // });
+    newUser.save().then(newDoc => {
+        res.json({ result: true, token: newDoc.token });
+      });
+    
+
+  } catch(e) {
+    res.json({result: false, error: e})
+  }
 });
 
 //Sign in ou up with google/facebook 

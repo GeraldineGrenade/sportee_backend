@@ -16,7 +16,7 @@ const userSchema = mongoose.Schema({
     password: String,
     phone: String,
     username: String,
-    dateOfBirth: {type: Date, default : Date()},
+    dateOfBirth: {type: Date, default : new Date()},
     avatar: String,
     token: String,
     description: {type: String, default: ''},
