@@ -41,7 +41,7 @@ router.post('/signup', (req, res) => {
     badges: []
   });
 
-  res.json({newUser})
+  res.json({savedUser : newUser})
 
   // newUser.save().then(newDoc => {
   //   res.json({ result: true, token: newDoc.token });
