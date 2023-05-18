@@ -14,12 +14,12 @@ const userSchema = mongoose.Schema({
     firstname: String,
     email: String,
     password: String,
-    phone: Number,
+    phone: {type: Number, default: 0606060606},
     username: String,
-    dateOfBirth: Date,
+    dateOfBirth: {type: Date, default : Date()},
     avatar: String,
     token: String,
-    description: String,
+    description: {type: String, default: ''},
     preferences : preferenceSchema,
     badges : [{type: mongoose.Schema.Types.ObjectId, ref: 'badges'}]
 });

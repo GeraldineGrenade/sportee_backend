@@ -1,20 +1,8 @@
 var express = require('express');
 var router = express.Router();
+const uid2 = require('uid2');
 
 const User = require('../models/users');
-
-//test route post 
-// router.post('/', (req, res) => {
-//   // User.push(req.body.newUser)
-//   res.json({ userList: User })
-
-// })
-
-//test route get
-router.get('/', (req, res) => {
-  res.json({ usersList: User })
-});
-
 
 // GET to verify if username is already present in DB
 router.get('/checkUsername/:username', (req, res) => {
@@ -28,37 +16,32 @@ router.get('/checkUsername/:username', (req, res) => {
 router.get('/checkEmail/:email', (req, res) => {
   User.findOne({ email: req.params.email })
     .then(data => {
-      console.log('data in back ---', data)
       data === null ? res.json({ result: true }) : res.json({ result: false })
     })
 });
 
-
 //Signup route - register new user in DB
 router.post('/signup', (req, res) => {
+      console.log(req.body)
+      // const newUser = new User({
+      //   lastname: String,
+      //   firstname: String,
+      //   email: String,
+      //   password: bcrypt.hashSync(req.body.password, 10),
+      //   phone: Number,
+      //   username: String,
+      //   dateOfBirth: Date,
+      //   avatar: String,
+      //   token: uid2(32),
+      //   description: '',
+      //   preferences : preferenceSchema,
+      //   badges : []
+      // });
 
-  // Check if the user has not already been registered
-  User.findOne({ username: req.body.username }).then(data => {
-    if (data === null) {
-      const hash = bcrypt.hashSync(req.body.password, 10);
-
-      const newUser = new User({
-        username: req.body.username,
-        password: hash,
-        token: uid2(32),
-        canBookmark: true,
-      });
-
-      newUser.save().then(newDoc => {
-        res.json({ result: true, token: newDoc.token });
-      });
-    } else {
-      // User already exists in database
-      res.json({ result: false, error: 'User already exists' });
-    }
-  });
+      // newUser.save().then(newDoc => {
+      //   res.json({ result: true, token: newDoc.token });
+      // });
 });
-
 
 //Sign in ou up with google/facebook 
 router.post('/social', async (req, res) => {
