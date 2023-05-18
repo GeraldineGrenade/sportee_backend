@@ -32,13 +32,13 @@ router.post('/signup', (req, res) => {
       lastname,
       firstname,
       email,
-      password: bcrypt.hashSync(password, 10),
-      phone,
-      username,
-      avatar,
-      token: uid2(32),
-      preferences: preferences,
-      badges: []
+      // password: bcrypt.hashSync(password, 10),
+      // phone,
+      // username,
+      // avatar,
+      // token: uid2(32),
+      // preferences,
+      // badges: []
     });
 
     newUser.save().then(newDoc => {
