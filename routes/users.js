@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 const uid2 = require('uid2');
+const bcrypt = require('bcrypt');
 
 const User = require('../models/users');
 
@@ -37,8 +38,8 @@ router.post('/signup', (req, res) => {
       username,
       avatar,
       token: uid2(32),
-      // preferences,
-      // badges: []
+      preferences,
+      badges: []
     });
 
     newUser.save().then(newDoc => {
