@@ -41,9 +41,11 @@ router.post('/signup', (req, res) => {
     badges: []
   });
 
-  newUser.save().then(newDoc => {
-    res.json({ result: true, token: newDoc.token });
-  });
+  console.log(newUser)
+
+  // newUser.save().then(newDoc => {
+  //   res.json({ result: true, token: newDoc.token });
+  // });
 });
 
 //Sign in ou up with google/facebook 
