@@ -21,7 +21,7 @@ router.get('/checkEmail/:email', (req, res) => {
     })
 });
 
-//Signup route - register new user in DB
+//Signup - register new user in DB
 router.post('/signup', (req, res) => {
   try {
 
@@ -47,6 +47,18 @@ router.post('/signup', (req, res) => {
   } catch(e) {
     res.json({result: false, error: e})
   }
+});
+
+//Sigin with mail
+router.post('/signin', (req, res) => {
+
+  User.findOne({ email: req.body.email }).then(data => {
+    if (data && bcrypt.compareSync(req.body.password, data.password)) {
+      res.json({ result: true, user: data });
+    } else {
+      res.json({ result: false});
+    }
+  });
 });
 
 //Sign in ou up with google/facebook 
