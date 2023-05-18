@@ -1,8 +1,6 @@
 var express = require('express');
 var router = express.Router();
 
-
-
 const User = require('../models/users');
 
 //test route post 
@@ -22,41 +20,48 @@ router.get('/', (req, res) => {
 router.get('/checkUsername/:username', (req, res) => {
   User.findOne({ username: req.params.username })
     .then(data => {
+      data === null ? res.json({ result: true }) : res.json({ result: false })
+    })
+});
+
+// GET to verify if email is already present in DB
+router.get('/checkEmail/:email', (req, res) => {
+  User.findOne({ email: req.params.email })
+    .then(data => {
       console.log('data in back ---', data)
       data === null ? res.json({ result: true }) : res.json({ result: false })
     })
 });
 
-// Register new user in DB
-// router.post('/signup', (req, res) => {
-//   if (!checkBody(req.body, ['username', 'password'])) {
-//     res.json({ result: false, error: 'Missing or empty fields' });
-//     return;
-//   }
 
-//   // Check if the user has not already been registered
-//   User.findOne({ username: req.body.username }).then(data => {
-//     if (data === null) {
-//       const hash = bcrypt.hashSync(req.body.password, 10);
+//Signup route - register new user in DB
+router.post('/signup', (req, res) => {
 
-//       const newUser = new User({
-//         username: req.body.username,
-//         password: hash,
-//         token: uid2(32),
-//         canBookmark: true,
-//       });
+  // Check if the user has not already been registered
+  User.findOne({ username: req.body.username }).then(data => {
+    if (data === null) {
+      const hash = bcrypt.hashSync(req.body.password, 10);
 
-//       newUser.save().then(newDoc => {
-//         res.json({ result: true, token: newDoc.token });
-//       });
-//     } else {
-//       // User already exists in database
-//       res.json({ result: false, error: 'User already exists' });
-//     }
-//   });
-// });
+      const newUser = new User({
+        username: req.body.username,
+        password: hash,
+        token: uid2(32),
+        canBookmark: true,
+      });
 
-router.post('/', async (req, res) => {
+      newUser.save().then(newDoc => {
+        res.json({ result: true, token: newDoc.token });
+      });
+    } else {
+      // User already exists in database
+      res.json({ result: false, error: 'User already exists' });
+    }
+  });
+});
+
+
+//Sign in ou up with google/facebook 
+router.post('/social', async (req, res) => {
   try {
     const { family_name, given_name, email } = req.body.userInfo
 
