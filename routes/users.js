@@ -20,29 +20,30 @@ router.get('/checkEmail/:email', (req, res) => {
     })
 });
 
+
+//{"avatar": "https://res.cloudinary.com/dsd7uux0v/image/upload/v1684405796/sportee/avatar1_suh7vc.png", "dateOfBirth": "", "email": "geraldine.grenade@gmail.com", "firstname": "Géraldine", "lastname": "Grenade", "password": "Gg_06.04#", "telephone": "", "userPreferences": {"habits": ["Le midi en semaine"], "level": "Débutant", "sports": ["6463911a0efb12e60cbd26a7", "646391e10efb12e60cbd26ac"]}, "username": "GG"}
+
 //Signup route - register new user in DB
 router.post('/signup', (req, res) => {
-      console.log(req.body)
-      // const newUser = new User({
-      //   lastname: String,
-      //   firstname: String,
-      //   email: String,
-      //   password: bcrypt.hashSync(req.body.password, 10),
-      //   phone: Number,
-      //   username: String,
-      //   dateOfBirth: Date,
-      //   avatar: String,
-      //   token: uid2(32),
-      //   description: '',
-      //   preferences : preferenceSchema,
-      //   badges : []
-      // });
+  const { avatar, dateOfBirth, email, firstname, lastname, password, phone, preferences, username } = req.body
+  const newUser = new User({
+    lastname,
+    firstname,
+    email,
+    password: bcrypt.hashSync(password, 10),
+    phone,
+    username,
+    dateOfBirth,
+    avatar,
+    token: uid2(32),
+    description: '',
+    preferences: preferences,
+    badges: []
+  });
 
-      res.json(req.body)
-
-      // newUser.save().then(newDoc => {
-      //   res.json({ result: true, token: newDoc.token });
-      // });
+  newUser.save().then(newDoc => {
+    res.json({ result: true, token: newDoc.token });
+  });
 });
 
 //Sign in ou up with google/facebook 
