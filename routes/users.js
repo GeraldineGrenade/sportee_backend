@@ -21,9 +21,6 @@ router.get('/checkEmail/:email', (req, res) => {
     })
 });
 
-
-//{"avatar": "https://res.cloudinary.com/dsd7uux0v/image/upload/v1684405796/sportee/avatar1_suh7vc.png", "dateOfBirth": "", "email": "geraldine.grenade@gmail.com", "firstname": "Géraldine", "lastname": "Grenade", "password": "Gg_06.04#", "telephone": "", "userPreferences": {"habits": ["Le midi en semaine"], "level": "Débutant", "sports": ["6463911a0efb12e60cbd26a7", "646391e10efb12e60cbd26ac"]}, "username": "GG"}
-
 //Signup route - register new user in DB
 router.post('/signup', (req, res) => {
   try {
@@ -42,8 +39,8 @@ router.post('/signup', (req, res) => {
       badges: []
     });
 
-    newUser.save().then(newDoc => {
-        res.json({ result: true, token: newDoc.token });
+    newUser.save().then(data => {
+        res.json({ result: true, user: data });
       });
     
 
