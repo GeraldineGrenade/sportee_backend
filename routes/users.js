@@ -38,6 +38,8 @@ router.post('/signup', (req, res) => {
       //   badges : []
       // });
 
+      res.json({result : true})
+
       // newUser.save().then(newDoc => {
       //   res.json({ result: true, token: newDoc.token });
       // });

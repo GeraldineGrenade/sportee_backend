@@ -14,7 +14,7 @@ const userSchema = mongoose.Schema({
     firstname: String,
     email: String,
     password: String,
-    phone: {type: Number, default: 0606060606},
+    phone: String,
     username: String,
     dateOfBirth: {type: Date, default : Date()},
     avatar: String,
