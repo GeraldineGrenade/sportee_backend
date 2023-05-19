@@ -1,8 +1,6 @@
 var express = require('express');
 var router = express.Router();
 
-
-
 const Activity = require('../models/Activities');
 
 //POST NEW ACTIVITY
@@ -30,11 +28,12 @@ router.post ('/', async (req, res) => {
     }catch (error) {
         res.json({error})
     }
-})
-// GET NEW ACTIVITY
+});
+
+// GET ALL ACTIVITIES
 router.get('/', async (req, res) => {
     try {
-        const activities = await Activity.find().populate('users', 'sport', 'participants');
+        const activities = await Activity.find().populate('user', 'sport', 'participants');
         res.json(activities);
     } catch (error) {
         res.json({ error });
