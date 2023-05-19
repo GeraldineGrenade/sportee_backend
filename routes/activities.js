@@ -34,7 +34,7 @@ router.post ('/', async (req, res) => {
 router.get('/', async (req, res) => {
     try {
         const activities = await Activity.find().populate('user', 'sport', 'participants');
-        res.json(activities);
+        res.json({activities});
     } catch (error) {
         res.json({ error });
     }
