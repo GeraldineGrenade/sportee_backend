@@ -34,7 +34,7 @@ router.post ('/', async (req, res) => {
 router.get('/', async (req, res) => {
     try {
         const activities = await Activity.find()
-        .populate('user')
+        // .populate('user')
         .populate('sport')
         // .populate('participants.user')
         // .populate('conversation.users')
