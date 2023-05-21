@@ -31,15 +31,14 @@ router.post ('/', async (req, res) => {
 });
 
 // GET ALL ACTIVITIES
-//.populate('user', 'sport', 'participants.user', 'conversation.users', 'conversation.messages.user')
 router.get('/', async (req, res) => {
     try {
         const activities = await Activity.find()
         .populate('user')
         .populate('sport')
-        .populate('participants.user')
-        .populate('conversation.users')
-        .populate('conversation.messages.user')
+        // .populate('participants.user')
+        // .populate('conversation.users')
+        // .populate('conversation.messages.user')
         res.json({activities});
     } catch (error) {
         res.json({ error });
