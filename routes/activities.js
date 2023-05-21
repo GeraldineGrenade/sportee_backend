@@ -51,7 +51,14 @@ router.get('/getActivity/:id', (req, res) => {
         .populate('user')
         .populate('sport')
         .populate('participants.user')
-        .then(data => data ? res.json({ result: true, activity: data }) : res.json({ result: false }))
+        .then(data => {
+            if (data) {
+                const { _id, name, sport, description, place, level, date, time, nbMaxParticipants, user, participants } = data
+                res.json({ result: true, activity: { _id, name, sport, description, place, level, date, time, nbMaxParticipants, user, participants }}) 
+            } else {
+                res.json({ result: false })
+            }
+        })
 });
 
 
