@@ -51,7 +51,7 @@ router.get('/getActivity/:id', (req, res) => {
         .populate('user')
         .populate('sport')
         .populate('participants.user')
-        .then(data => data ? res.json({ result: true, sports: data }) : res.json({ result: false }))
+        .then(data => data ? res.json({ result: true, activity: data }) : res.json({ result: false }))
 });
 
 
