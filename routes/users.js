@@ -55,7 +55,6 @@ router.post('/signin', (req, res) => {
   User.findOne({ email: req.body.email })
   .populate('preferences.sports')
   .then(data => {
-    console.log(data)
     if (data && bcrypt.compareSync(req.body.password, data.password)) {
       res.json({ result: true, user: data });
     } else {

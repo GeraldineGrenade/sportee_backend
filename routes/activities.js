@@ -4,7 +4,7 @@ var router = express.Router();
 const Activity = require('../models/Activities');
 
 //POST NEW ACTIVITY
-router.post ('/', async (req, res) => {
+router.post('/', async (req, res) => {
     try {
         const { name, sport, description, place, level, date, time, nbMaxParticipants, conversation, user, participants } = req.body
 
@@ -24,9 +24,9 @@ router.post ('/', async (req, res) => {
         console.log(activity)
         await activity.save()
 
-        res.json({ message: 'L\'activité a été créée avec succès'})
-    }catch (error) {
-        res.json({error})
+        res.json({ message: 'L\'activité a été créée avec succès' })
+    } catch (error) {
+        res.json({ error })
     }
 });
 
@@ -34,15 +34,24 @@ router.post ('/', async (req, res) => {
 router.get('/', async (req, res) => {
     try {
         const activities = await Activity.find()
-        // .populate('user')
-        .populate('sport')
+            // .populate('user')
+            .populate('sport')
         // .populate('participants.user')
         // .populate('conversation.users')
         // .populate('conversation.messages.user')
-        res.json({activities});
+        res.json({ activities });
     } catch (error) {
         res.json({ error });
     }
+});
+
+//Get activity details by ID (without conversation details)
+router.get('/getActivity/:id', (req, res) => {
+    Activity.findById(req.params.id)
+        .populate('user')
+        .populate('sport')
+        .populate('participants.user')
+        .then(data => data ? res.json({ result: true, sports: data }) : res.json({ result: false }))
 });
 
 
