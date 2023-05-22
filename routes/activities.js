@@ -62,4 +62,27 @@ router.get('/getActivity/:id', (req, res) => {
 });
 
 
+//Add new user participant at the Activity 
+router.put("/:activityId/:userId", (req, res) =>{
+
+   Activity.updateOne({_id : req.params.activityId}, {$push: {participants: {user: req.params.userId, isApproved: false}}}).then(() =>{
+    //  Activity.find().then(AddedNewParticipant => {
+       res.json({ result: true });
+     });
+   })
+ //})
+
+
 module.exports = router;
+
+
+    // Activity.findOne({_id : req.params.id}).then((data) => {
+    // currentNbrparticipant = data.nbMaxParticipants  
+    // }).then(() => {
+    //   Activity.updateOne({_id : req.params.activityId}, {$push: {friends: {firstName: "Harry", lastName: "Potter"}}}).then(() =>{
+    //     Activity.find().then(AddedNewParticipant => {
+    //       res.json({ result: true, AddedNewParticipant});
+    //     })
+    // })
+    //   })
+    // })
