@@ -66,11 +66,9 @@ router.get('/getActivity/:id', (req, res) => {
 router.put("/:activityId/:userId", (req, res) =>{
 
    Activity.updateOne({_id : req.params.activityId}, {$push: {participants: {user: req.params.userId, isApproved: false}}}).then(() =>{
-    //  Activity.find().then(AddedNewParticipant => {
        res.json({ result: true });
      });
    })
- //})
 
 
 module.exports = router;
