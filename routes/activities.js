@@ -6,7 +6,7 @@ const Activity = require('../models/Activities');
 //POST NEW ACTIVITY
 router.post('/', async (req, res) => {
     try {
-        const { name, sport, description, place, level, date, time, nbMaxParticipants, conversation, user, participants } = req.body
+        const { name, sport, description, place, level, date, time, nbMaxParticipants, conversation, user, participants } = req.body.activityData
 
         const activity = new Activity({
             name,
@@ -21,10 +21,10 @@ router.post('/', async (req, res) => {
             user,
             participants
         })
-        console.log(activity)
-        await activity.save()
+        // console.log(activity)
+        const savedActivity = await activity.save()
 
-        res.json({ message: 'L\'activité a été créée avec succès' })
+        res.json({ message: 'L\'activité a été créée avec succès', activity: savedActivity })
     } catch (error) {
         res.json({ error })
     }
