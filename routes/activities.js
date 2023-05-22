@@ -2,12 +2,14 @@ var express = require('express');
 var router = express.Router();
 
 const Activity = require('../models/Activities');
-
+const User = require('../models/users')
 //POST NEW ACTIVITY
 router.post('/', async (req, res) => {
     try {
-        const { name, sport, description, place, level, date, time, nbMaxParticipants, conversation, user, participants } = req.body.activityData
-
+        const { name, sport, description, place, level, date, time, nbMaxParticipants, userToken } = req.body
+  const user = await User.findOne({ token: userToken})
+    const userId = user._id
+        
         const activity = new Activity({
             name,
             sport,
@@ -17,11 +19,14 @@ router.post('/', async (req, res) => {
             date,
             time,
             nbMaxParticipants,
-            conversation,
-            user,
-            participants
+            conversation : {
+        users: [userId], 
+        messages: []
+      },
+            user: userId,
+            participants : []
         })
-        // console.log(activity)
+        
         const savedActivity = await activity.save()
 
         res.json({ message: 'L\'activité a été créée avec succès', activity: savedActivity })
