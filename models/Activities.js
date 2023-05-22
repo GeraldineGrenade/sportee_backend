@@ -32,7 +32,7 @@ const activitySchema = mongoose.Schema({
     place: placeSchema,
     level: String,
     date: Date,
-    time: Date,
+    time: Number,
     nbMaxParticipants: Number,
     conversation: conversationSchema,
     user: {type: mongoose.Schema.Types.ObjectId, ref: 'users'},
