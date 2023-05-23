@@ -41,6 +41,7 @@ const activitySchema = mongoose.Schema({
 
 
 const Activity = mongoose.model('activities', activitySchema);
-
+// const Message = mongoose.model('messages', messageSchema)
+// const Conversation = mongoose.model('conversations', conversationSchema)
 
 module.exports = Activity;
