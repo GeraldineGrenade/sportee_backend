@@ -52,6 +52,7 @@ router.get('/', async (req, res) => {
     }
 });
 
+
 //Get activity details by ID (without conversation details)
 router.get('/getActivity/:id', (req, res) => {
     Activity.findById(req.params.id)
@@ -76,6 +77,29 @@ router.put("/:activityId/:userId", (req, res) =>{
        res.json({ result: true });
      });
    })
+
+//Find all activities in which a user is participating
+router.get('/getActivitiesOfUser/:userToken', (req, res) => {
+    res.json({result : ok})
+
+    User.findOne({ token: userToken})
+    .then(data => {
+        if(data) {
+            Activity.find({ participants : { user : req.params.userId, isApproved: true }})
+            .then(data => {
+                if(data) {
+                    res.json({result : true, activities : data})    
+                } else {
+                res.json({result : false, message : 'no activities found'})
+                }
+            })
+        } else {
+            res.json({result : false, message : 'user not found'})
+        }
+    })
+    // 
+});
+
 
 // router.put("/:activityId/:userId", (req, res) =>{
 
