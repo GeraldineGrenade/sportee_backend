@@ -4,13 +4,12 @@ var router = express.Router()
 const Activity = require('../models/Activities');
 const Pusher = require("pusher");
 
-const { updateOne } = require('../models/Activities');
 
 const pusher = new Pusher({
-    appId: process.env.PUSHER_APPID,
-    key: process.env.PUSHER_KEY,
-    secret: process.env.PUSHER_SECRET,
-    cluster: process.env.PUSHER_CLUSTER,
+    appId: "1605724",
+    key: "11d41dded094302fda2e",
+    secret: "81666e768eb7907f1a19",
+    cluster: "eu",
     useTLS: true
 })
 router.put('/join-channel', (req, res) => {
@@ -19,6 +18,7 @@ router.put('/join-channel', (req, res) => {
     })
     res.json({ result: true })
 })
+
 router.post('/messages', (req, res) => {
     const message = req.body.message;
 
@@ -26,12 +26,14 @@ router.post('/messages', (req, res) => {
 
     res.sendStatus(200)
 })
+
 router.delete('/leave-channel', (req, res) => {
     pusher.trigger('sportee_channel', 'leave', {
         status: 'User leaved channel'
     })
     res.json({ result: true })
 })
+
 router.put("/:conversationId", (req, res) => {
 
     const { message, user, timestamp } = req.body
