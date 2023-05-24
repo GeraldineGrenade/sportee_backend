@@ -187,13 +187,4 @@ router.get('/getActivitiesOfUser/',  (req, res) => {
 module.exports = router;
 
 
-    // Activity.findOne({_id : req.params.id}).then((data) => {
-    // currentNbrparticipant = data.nbMaxParticipants  
-    // }).then(() => {
-    //   Activity.updateOne({_id : req.params.activityId}, {$push: {friends: {firstName: "Harry", lastName: "Potter"}}}).then(() =>{
-    //     Activity.find().then(AddedNewParticipant => {
-    //       res.json({ result: true, AddedNewParticipant});
-    //     })
-    // })
-    //   })
-    // })
+  
