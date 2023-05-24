@@ -2,6 +2,7 @@ var express = require('express')
 var router = express.Router()
 
 const Activity = require('../models/Activities');
+const User = require('../models/users')
 const Pusher = require("pusher");
 
 
@@ -12,37 +13,21 @@ const pusher = new Pusher({
     cluster: "eu",
     useTLS: true
 })
-router.put('/join-channel', (req, res) => {
-    pusher.trigger('sportee_channel', 'join', {
-        status: 'User joined channel'
-    })
-    res.json({ result: true })
+router.get('/userId/:userToken', async (req, res) => {
+    const user = await User.findOne({ token: req.params.userToken })
+    res.json({ userId: user._id })
 })
 
-router.post('/messages', (req, res) => {
-    const message = req.body.message;
 
-    pusher.trigger('sportee_channel', 'new-message', { status: 'new message' })
-
-    res.sendStatus(200)
-})
-
-router.delete('/leave-channel', (req, res) => {
-    pusher.trigger('sportee_channel', 'leave', {
-        status: 'User leaved channel'
-    })
-    res.json({ result: true })
-})
-
-router.put("/:conversationId", (req, res) => {
+router.put("/:activityId", (req, res) => {
 
     const { message, user, timestamp } = req.body
+    pusher.trigger('sportee_channel', 'new-message', { status: 'new message' })
     Activity.findOneAndUpdate(
-        { "conversation._id": req.params.conversationId },
+        { "_id": req.params.activityId },
         { $push: { "conversation.messages": { message, user, timestamp } } }
     )
         .then((data) => {
-
             res.json({ result: true })
         })
         .catch((error) => {
