@@ -95,6 +95,16 @@ router.put("/:activityId/:userId", (req, res) =>{
     });
 })
 
+//Accept the participation request of a user
+router.put('/acceptParticipation/:activityId/:participantId', (req,res) => {
+    Activity.updateOne(
+        //{_id : req.params.activityId}, { $set: { "participants.$[_id]": req.params.activityId } }
+        { myArray: [ 0, 1 ] },
+        { $set: { "myArray.$[element]": 2 } },
+        { arrayFilters: [ { element: 0 } ], upsert: true }
+    )
+})
+
 
 
 //Find all activities created by user
