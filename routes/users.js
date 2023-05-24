@@ -56,6 +56,7 @@ router.post('/signin', (req, res) => {
   .populate('preferences.sports')
   .then(data => {
     if (data && bcrypt.compareSync(req.body.password, data.password)) {
+      //Only send necessary data
       res.json({ result: true, user: data });
     } else {
       res.json({ result: false});
