@@ -3,14 +3,16 @@ var router = express.Router();
 
 const Activity = require('../models/Activities');
 const User = require('../models/users')
-// const Conversation = require ('../models/Activities')
-// const Message = require('../models/Activities')
+
 //POST NEW ACTIVITY
 router.post('/', async (req, res) => {
     try {
         const { name, sport, description, place, level, date, time, nbMaxParticipants, userToken } = req.body
+        
+
   const user = await User.findOne({ token: userToken})
     const userId = user._id
+
         
         const activity = new Activity({
             name,
@@ -35,7 +37,14 @@ router.post('/', async (req, res) => {
     } catch (error) {
         res.json({ error })
     }
+
+    Activity.findById()
+            .then(data => 
+                res.json(data.conversation._id))
+                          console.log(data.conversation._id)
 });
+
+    
 
 // GET ALL ACTIVITIES
 router.get('/', async (req, res) => {
@@ -77,43 +86,7 @@ router.put("/:activityId/:userId", (req, res) =>{
      });
    })
 
-// router.put("/:activityId/:userId", (req, res) =>{
 
-//    Activity.updateOne(
-//      {_id : req.params.activityId},
-//      {$push: {conversation: {user: req.params.userId, conversation}}}).then(() =>{
-//        res.json({ result: true });
-//      });
-//    })
-
-// router.put("/:activityId/:userId", (req, res)=> {
-//     const {users, messages } = new Conversation({
-//         users,
-//         messages: []
-//     });
-
-//     newConversation
-//         .save()
-//         .then((conversation)=> {
-            
-//       messages.forEach((messageData) => {
-//         const newMessage = new Message({
-//             user: messageData.user,
-//             message: messageData.message,
-//             timestamp: messageData.timestamp,
-//         });
-//         conversation.messages.push(newMessage)
-                
-//         });
-//         return conversation.save();
-//         })
-//         .then((savedConversation) => {
-//             res.json({result: true, conversation: savedConversation})
-//         })
-//         .catch((error) => {
-//             res.json({error:'Erreur lors de la création de la conversation'})
-//         })
-// })
 
 
 module.exports = router;
