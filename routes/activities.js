@@ -38,13 +38,20 @@ router.post('/', async (req, res) => {
         res.json({ error })
     }
 
-    Activity.findById()
-            .then(data => 
-                res.json(data.conversation._id))
-                          console.log(data.conversation._id)
+  
 });
 
-    
+//GET CONVERSATION BY ID
+router.get('/getConversation/:id', (req, res) => {
+    Activity.findById(req.params.id)
+        .then(data => {
+            console.log(data.conversation._id);
+            res.json({roomId: data.conversation._id});
+        })
+        .catch(error => {
+            res.json({error : 'Une erreur s\'est produite lors de la récupération de la conversation'} );
+        });
+});
 
 // GET ALL ACTIVITIES
 router.get('/', async (req, res) => {
@@ -63,7 +70,7 @@ router.get('/', async (req, res) => {
 
 
 //Get activity details by ID (without conversation details)
-router.get('/getActivity/:id', (req, res) => {
+router.get('/:getActivity/:id', (req, res) => {
     Activity.findById(req.params.id)
         .populate('user')
         .populate('sport')
@@ -90,16 +97,19 @@ router.put("/:activityId/:userId", (req, res) =>{
 
 
 //Find all activities in which a user is participating
-router.get('/getActivitiesOfUser/:userToken', (req, res) => {
-    let userId
-    User.findOne({ token: req.params.userToken})
+router.get('/getActivitiesOfUser/',  (req, res) => {
+    console.log(req.query.token)
+     let userId
+    User.findOne({ token: req.query.token})
     .then(data => {
+        console.log(data)
         userId = data._id
         if(data) {
             Activity.find({ 'participants' : { $elemMatch: {user: userId, isApproved: true} }})
             .populate('sport')
             .populate('user')
             .then(data => {
+                console.log(data)
                 if(data) {
                     let dataSet = data.map(e => {
                         return {
@@ -112,7 +122,7 @@ router.get('/getActivitiesOfUser/:userToken', (req, res) => {
                             conversationId : e.conversation._id,
                         }
                     })
-
+    
                     res.json({result : true, activities : dataSet})    
                 } else {
                 res.json({result : false, message : 'no activities found'})
@@ -122,7 +132,9 @@ router.get('/getActivitiesOfUser/:userToken', (req, res) => {
             res.json({result : false, message : 'user not found'})
         }
     })
-    // 
+    .catch(err => console.error(err) )
+    
+    
 });
 
 
