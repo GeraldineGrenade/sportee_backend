@@ -95,14 +95,58 @@ router.put("/:activityId/:userId", (req, res) =>{
     });
 })
 
+//Accept the participation request of a user
+router.put('/acceptParticipation/:activityId/:participantId', (req,res) => {
+    Activity.updateOne(
+        //{_id : req.params.activityId}, { $set: { "participants.$[_id]": req.params.activityId } }
+        { myArray: [ 0, 1 ] },
+        { $set: { "myArray.$[element]": 2 } },
+        { arrayFilters: [ { element: 0 } ], upsert: true }
+    )
+})
+
+
+
+//Find all activities created by user
+router.get('/getActivitiesByUser/',  (req, res) => {
+    let userId
+    User.findOne({ token: req.query.token})
+    .then(data => {
+        userId = data._id
+        if(data) {
+            Activity.find({ user: userId })
+            .populate('sport')
+            .populate('user')
+            .then(data => {
+                if(data) {
+                    let dataSet = data.map(e => {
+                        return {
+                            activityId : e._id,
+                            name : e.name,
+                            sport : e.sport,
+                            date : e.date,
+                            time : e.time, 
+                            user : { username : e.user.username, avatar : e.user.avatar, token : e.user.token },
+                        }
+                    })
+    
+                    res.json({result : true, activities : dataSet})    
+                } else {
+                res.json({result : false, message : 'no activities found'})
+                }
+            })
+        } else {
+            res.json({result : false, message : 'user not found'})
+        }
+    })
+    .catch(err => console.error(err) )
+})
 
 //Find all activities in which a user is participating
 router.get('/getActivitiesOfUser/',  (req, res) => {
-    console.log(req.query.token)
-     let userId
+    let userId
     User.findOne({ token: req.query.token})
     .then(data => {
-        console.log(data)
         userId = data._id
         if(data) {
             Activity.find({ 'participants' : { $elemMatch: {user: userId, isApproved: true} }})
@@ -134,7 +178,6 @@ router.get('/getActivitiesOfUser/',  (req, res) => {
     })
     .catch(err => console.error(err) )
     
-    
 });
 
 
@@ -144,13 +187,4 @@ router.get('/getActivitiesOfUser/',  (req, res) => {
 module.exports = router;
 
 
-    // Activity.findOne({_id : req.params.id}).then((data) => {
-    // currentNbrparticipant = data.nbMaxParticipants  
-    // }).then(() => {
-    //   Activity.updateOne({_id : req.params.activityId}, {$push: {friends: {firstName: "Harry", lastName: "Potter"}}}).then(() =>{
-    //     Activity.find().then(AddedNewParticipant => {
-    //       res.json({ result: true, AddedNewParticipant});
-    //     })
-    // })
-    //   })
-    // })
+  
