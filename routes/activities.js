@@ -38,13 +38,20 @@ router.post('/', async (req, res) => {
         res.json({ error })
     }
 
-    Activity.findById()
-            .then(data => 
-                res.json(data.conversation._id))
-                          console.log(data.conversation._id)
+  
 });
 
-    
+//GET CONVERSATION BY ID
+router.get('/getConversation/:id', (req, res) => {
+    Activity.findById(req.params.id)
+        .then(data => {
+            console.log(data.conversation._id);
+            res.json({roomId: data.conversation._id});
+        })
+        .catch(error => {
+            res.json({error : 'Une erreur s\'est produite lors de la récupération de la conversation'} );
+        });
+});
 
 // GET ALL ACTIVITIES
 router.get('/', async (req, res) => {
@@ -63,7 +70,7 @@ router.get('/', async (req, res) => {
 
 
 //Get activity details by ID (without conversation details)
-router.get('/getActivity/:id', (req, res) => {
+router.get('/:getActivity/:id', (req, res) => {
     Activity.findById(req.params.id)
         .populate('user')
         .populate('sport')
