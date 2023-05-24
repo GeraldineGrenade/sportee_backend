@@ -40,7 +40,8 @@ router.post('/signup', (req, res) => {
     });
 
     newUser.save().then(data => {
-        res.json({ result: true, user: data });
+        const { _id, lastname, firstname, email, phone, username, dateOfBirth, avatar, token, preferences } = data
+        res.json({ result: true, user: {_id, lastname, firstname, email, phone, username, dateOfBirth, avatar, token, preferences } });
       });
     
 
@@ -56,8 +57,8 @@ router.post('/signin', (req, res) => {
   .populate('preferences.sports')
   .then(data => {
     if (data && bcrypt.compareSync(req.body.password, data.password)) {
-      //Only send necessary data
-      res.json({ result: true, user: data });
+      const { _id, lastname, firstname, email, phone, username, dateOfBirth, avatar, token, preferences } = data
+      res.json({ result: true, user: {_id, lastname, firstname, email, phone, username, dateOfBirth, avatar, token, preferences } });
     } else {
       res.json({ result: false});
     }
