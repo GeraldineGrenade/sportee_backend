@@ -96,13 +96,47 @@ router.put("/:activityId/:userId", (req, res) =>{
 })
 
 
-//Find all activities in which a user is participating
-router.get('/getActivitiesOfUser/',  (req, res) => {
-    console.log(req.query.token)
-     let userId
+
+//Find all activities created by user
+router.get('/getActivitiesByUser/',  (req, res) => {
+    let userId
     User.findOne({ token: req.query.token})
     .then(data => {
-        console.log(data)
+        userId = data._id
+        if(data) {
+            Activity.find({ user: userId })
+            .populate('sport')
+            .populate('user')
+            .then(data => {
+                if(data) {
+                    let dataSet = data.map(e => {
+                        return {
+                            activityId : e._id,
+                            name : e.name,
+                            sport : e.sport,
+                            date : e.date,
+                            time : e.time, 
+                            user : { username : e.user.username, avatar : e.user.avatar, token : e.user.token },
+                        }
+                    })
+    
+                    res.json({result : true, activities : dataSet})    
+                } else {
+                res.json({result : false, message : 'no activities found'})
+                }
+            })
+        } else {
+            res.json({result : false, message : 'user not found'})
+        }
+    })
+    .catch(err => console.error(err) )
+})
+
+//Find all activities in which a user is participating
+router.get('/getActivitiesOfUser/',  (req, res) => {
+    let userId
+    User.findOne({ token: req.query.token})
+    .then(data => {
         userId = data._id
         if(data) {
             Activity.find({ 'participants' : { $elemMatch: {user: userId, isApproved: true} }})
@@ -133,7 +167,6 @@ router.get('/getActivitiesOfUser/',  (req, res) => {
         }
     })
     .catch(err => console.error(err) )
-    
     
 });
 
