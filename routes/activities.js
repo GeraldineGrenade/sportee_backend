@@ -212,9 +212,4 @@ router.get('/getActivitiesOfUser/', (req, res) => {
 
 });
 
-
-
-
-
 module.exports = router;
-
