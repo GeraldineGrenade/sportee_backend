@@ -2,7 +2,6 @@ const mongoose = require('mongoose');
 
 //TABLEAU DE SOUS-DOCUMENTS
 
-
 const messageSchema = mongoose.Schema({
     user:{type:mongoose.Schema.Types.ObjectId, ref: 'users'},
     message:String,
@@ -41,7 +40,5 @@ const activitySchema = mongoose.Schema({
 
 
 const Activity = mongoose.model('activities', activitySchema);
-// const Message = mongoose.model('messages', messageSchema)
-// const Conversation = mongoose.model('conversations', conversationSchema)
 
 module.exports = Activity;
