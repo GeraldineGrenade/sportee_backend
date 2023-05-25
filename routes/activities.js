@@ -8,12 +8,12 @@ const User = require('../models/users')
 router.post('/', async (req, res) => {
     try {
         const { name, sport, description, place, level, date, time, nbMaxParticipants, userToken } = req.body
-        
 
-  const user = await User.findOne({ token: userToken})
-    const userId = user._id
 
-        
+        const user = await User.findOne({ token: userToken })
+        const userId = user._id
+
+
         const activity = new Activity({
             name,
             sport,
@@ -23,14 +23,14 @@ router.post('/', async (req, res) => {
             date,
             time,
             nbMaxParticipants,
-            conversation : {
-        users: [userId], 
-        messages: []
-      },
+            conversation: {
+                users: [userId],
+                messages: []
+            },
             user: userId,
-            participants : []
+            participants: []
         })
-        
+
         const savedActivity = await activity.save()
 
         res.json({ message: 'L\'activité a été créée avec succès', activity: savedActivity })
@@ -38,7 +38,7 @@ router.post('/', async (req, res) => {
         res.json({ error })
     }
 
-  
+
 });
 
 //GET CONVERSATION BY ID
@@ -46,10 +46,10 @@ router.get('/getConversation/:id', (req, res) => {
     Activity.findById(req.params.id)
         .then(data => {
             console.log(data.conversation._id);
-            res.json({roomId: data.conversation._id});
+            res.json({ roomId: data.conversation._id });
         })
         .catch(error => {
-            res.json({error : 'Une erreur s\'est produite lors de la récupération de la conversation'} );
+            res.json({ error: 'Une erreur s\'est produite lors de la récupération de la conversation' });
         });
 });
 
@@ -70,7 +70,7 @@ router.get('/', async (req, res) => {
 
 
 //Get activity details by ID (without conversation details)
-router.get('/:getActivity/:id', (req, res) => {
+router.get('/getActivity/:id', (req, res) => {
     Activity.findById(req.params.id)
         .populate('user')
         .populate('sport')
@@ -78,129 +78,138 @@ router.get('/:getActivity/:id', (req, res) => {
         .then(data => {
             if (data) {
                 const { _id, name, sport, description, place, level, date, time, nbMaxParticipants, user, participants } = data
-                res.json({ result: true, activity: { _id, name, sport, description, place, level, date, time, nbMaxParticipants, user, participants }}) 
+                res.json({ result: true, activity: { _id, name, sport, description, place, level, date, time, nbMaxParticipants, user, participants } })
             } else {
                 res.json({ result: false })
             }
         })
 });
 
+//Get list of participants for one activity
+router.get('/getParticipants/:activityId', (req, res) => {
+    Activity.findById(req.params.activityId)
+        .populate('participants.user')
+        .then(data => {
+            if (data) {
+                res.json({ result: true, participants: data.participants })
+            } else {
+                res.json({ result: false })
+            }
+        })
+});
 
 //Add new user in an activity's participants list 
-router.put("/:activityId/:userId", (req, res) =>{
+router.put("/:activityId/:userId", (req, res) => {
 
-   Activity.updateOne({_id : req.params.activityId}, {$push: {participants: {user: req.params.userId, isApproved: false}}})
-   .then(() =>{
-       res.json({ result: true });
-    });
+    Activity.updateOne({ _id: req.params.activityId }, { $push: { participants: { user: req.params.userId, isApproved: false } } })
+        .then(() => {
+            res.json({ result: true });
+        });
 })
 
 //Accept the participation request of a user
-router.put('/acceptParticipation/:activityId/:participantId', (req,res) => {
-    Activity.updateOne(
-        {_id : req.params.activityId, "participants._id" : req.params.participantId}, { $set: { "participants.$[isApproved]" : true } }
+router.put('/acceptParticipation/:activityId/:participantId', async (req, res) => {
+    const activity = await Activity.findOne({ _id: req.params.activityId })
 
-    // {_id : req.params.activityId}, { $set: {"participants.$[isApproved]" : true } }, { arrayFilters : [{ _id: req.params.participantId}]}
+    const validatedParticipants = activity.participants.map(e => {
+        if (String(e._id).match(new RegExp(req.params.participantId))) {
+            return { _id: e._id, user: e.user, isApproved: true }
+        } else {
+            return e
+        }
+    })
 
-        // { myArray: [ 0, 1 ] },
-        // { $set: { "myArray.$[element]": 2 } },
-        // { arrayFilters: [ { element: 0 } ], upsert: true }
+    await Activity.updateOne({ _id: req.params.activityId }, { participants: validatedParticipants })
+    const participants = await Activity.findById(req.params.activityId)
 
+    res.json({ result: true, participants });
 
-        // db.students.updateOne(
-        //     { _id: 4, "grades.grade": 85 },
-        //     { $set: { "grades.$.std" : 6 } }
-        //  )
-    )
-    .then(data =>{
-        res.json({ result: true, data });
-     })
-    .catch(err => console.error(err))
 })
 
 //Refuse the participation request of a user
-router.put('/refuseParticipation/:activityId/:participantId', (req,res) => {
+router.put('/refuseParticipation/:activityId/:participantId', (req, res) => {
     Activity.updateOne(
-        {_id : req.params.activityId}, { $pull : { participants : { _id : req.params.participantId }}}
+        { _id: req.params.activityId }, 
+        { $pull: { participants: {_id: req.params.participantId} } }
     )
-    .then(data =>{
-        res.json({ result: true, data });
-     })
-    .catch(err => console.error(err))
+        .then(data => {
+            res.json({ result: true, data });
+        })
+        .catch(err => console.error(err))
 })
 
 
 //Find all activities created by user
-router.get('/getActivitiesByUser/',  (req, res) => {
+router.get('/getActivitiesByUser/', (req, res) => {
     let userId
-    User.findOne({ token: req.query.token})
-    .then(data => {
-        userId = data._id
-        if(data) {
-            Activity.find({ user: userId })
-            .populate('sport')
-            .populate('user')
-            .then(data => {
-                if(data) {
-                    let dataSet = data.map(e => {
-                        return {
-                            activityId : e._id,
-                            name : e.name,
-                            sport : e.sport,
-                            date : e.date,
-                            time : e.time, 
-                            user : { username : e.user.username, avatar : e.user.avatar, token : e.user.token },
+    User.findOne({ token: req.query.token })
+        .then(data => {
+            userId = data._id
+            if (data) {
+                Activity.find({ user: userId })
+                    .populate('sport')
+                    .populate('user')
+                    .then(data => {
+                        if (data) {
+                            let dataSet = data.map(e => {
+                                return {
+                                    activityId: e._id,
+                                    name: e.name,
+                                    sport: e.sport,
+                                    date: e.date,
+                                    time: e.time,
+                                    user: { username: e.user.username, avatar: e.user.avatar, token: e.user.token },
+                                }
+                            })
+
+                            res.json({ result: true, activities: dataSet })
+                        } else {
+                            res.json({ result: false, message: 'no activities found' })
                         }
                     })
-    
-                    res.json({result : true, activities : dataSet})    
-                } else {
-                res.json({result : false, message : 'no activities found'})
-                }
-            })
-        } else {
-            res.json({result : false, message : 'user not found'})
-        }
-    })
-    .catch(err => console.error(err) )
+            } else {
+                res.json({ result: false, message: 'user not found' })
+            }
+        })
+        .catch(err => console.error(err))
 })
 
 //Find all activities in which a user is participating
-router.get('/getActivitiesOfUser/',  (req, res) => {
+router.get('/getActivitiesOfUser/', (req, res) => {
     let userId
-    User.findOne({ token: req.query.token})
-    .then(data => {
-        userId = data._id
-        if(data) {
-            Activity.find({ 'participants' : { $elemMatch: {user: userId, isApproved: true} }})
-            .populate('sport')
-            .populate('user')
-            .then(data => {
-                console.log(data)
-                if(data) {
-                    let dataSet = data.map(e => {
-                        return {
-                            activityId : e._id,
-                            name : e.name,
-                            sport : e.sport,
-                            date : e.date,
-                            time : e.time, 
-                            user : { username : e.user.username, avatar : e.user.avatar, token : e.user.token },
-                            conversationId : e.conversation._id,
+    User.findOne({ token: req.query.token })
+        .then(data => {
+            userId = data._id
+            if (data) {
+                Activity.find({ 'participants': { $elemMatch: { user: userId, isApproved: true } } })
+                    .populate('sport')
+                    .populate('user')
+                    .then(data => {
+                        console.log(data)
+                        if (data) {
+                            let dataSet = data.map(e => {
+                                return {
+                                    activityId: e._id,
+                                    name: e.name,
+                                    sport: e.sport,
+                                    date: e.date,
+                                    time: e.time,
+                                    user: { username: e.user.username, avatar: e.user.avatar, token: e.user.token },
+                                    conversationId: e.conversation._id,
+                                }
+                            })
+
+                            res.json({ result: true, activities: dataSet })
+                        } else {
+                            res.json({ result: false, message: 'no activities found' })
                         }
                     })
-    
-                    res.json({result : true, activities : dataSet})    
-                } else {
-                res.json({result : false, message : 'no activities found'})
-                }
-            })
-        } else {
-            res.json({result : false, message : 'user not found'})
-        }
-    })
-    .catch(err => console.error(err) )
-    
+            } else {
+                res.json({ result: false, message: 'user not found' })
+            }
+        })
+        .catch(err => console.error(err))
+
 });
 
 
