@@ -40,7 +40,7 @@ router.get('/getConversation/:id', (req, res) => {
         .populate('conversation.messages')
         .then(data => {
             if (data) {
-                res.json({ result: true, messages: data.conversation.messages })
+                res.json({ result: true, messages: data.conversation.messages, name : data.name })
             } else {
                 res.json({ result: false })
             }
