@@ -129,8 +129,8 @@ router.put('/acceptParticipation/:activityId/:participantId', async (req, res) =
 //Refuse the participation request of a user
 router.put('/refuseParticipation/:activityId/:participantId', (req, res) => {
     Activity.updateOne(
-        { _id: req.params.activityId }, 
-        { $pull: { participants: {_id: req.params.participantId} } }
+        { _id: req.params.activityId },
+        { $pull: { participants: { _id: req.params.participantId } } }
     )
         .then(data => {
             res.json({ result: true, data });
@@ -213,3 +213,6 @@ router.get('/getActivitiesOfUser/', (req, res) => {
 });
 
 module.exports = router;
+
+
+
