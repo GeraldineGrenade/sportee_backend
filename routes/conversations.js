@@ -47,4 +47,24 @@ router.get('/getConversation/:id', (req, res) => {
         })
 })
 
+router.get('/getLastMessage/:id', (req, res) => {
+    Activity.findById(req.params.id)
+        .populate({
+            path: 'conversation.messages',
+            options: {
+                sort: {
+                    createdAt: -1
+                },
+                limit: 1
+            }
+        })
+        .then(data => {
+            if (data) {
+                res.json({ result: true, message: data.conversation.messages[data.conversation.messages.length - 1] })
+            } else {
+                res.json({ result: false })
+            }
+        })
+})
+
 module.exports = router
