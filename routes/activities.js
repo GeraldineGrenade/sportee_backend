@@ -98,13 +98,36 @@ router.put("/:activityId/:userId", (req, res) =>{
 //Accept the participation request of a user
 router.put('/acceptParticipation/:activityId/:participantId', (req,res) => {
     Activity.updateOne(
-        //{_id : req.params.activityId}, { $set: { "participants.$[_id]": req.params.activityId } }
-        { myArray: [ 0, 1 ] },
-        { $set: { "myArray.$[element]": 2 } },
-        { arrayFilters: [ { element: 0 } ], upsert: true }
+        {_id : req.params.activityId, "participants._id" : req.params.participantId}, { $set: { "participants.$[isApproved]" : true } }
+
+    // {_id : req.params.activityId}, { $set: {"participants.$[isApproved]" : true } }, { arrayFilters : [{ _id: req.params.participantId}]}
+
+        // { myArray: [ 0, 1 ] },
+        // { $set: { "myArray.$[element]": 2 } },
+        // { arrayFilters: [ { element: 0 } ], upsert: true }
+
+
+        // db.students.updateOne(
+        //     { _id: 4, "grades.grade": 85 },
+        //     { $set: { "grades.$.std" : 6 } }
+        //  )
     )
+    .then(data =>{
+        res.json({ result: true, data });
+     })
+    .catch(err => console.error(err))
 })
 
+//Refuse the participation request of a user
+router.put('/refuseParticipation/:activityId/:participantId', (req,res) => {
+    Activity.updateOne(
+        {_id : req.params.activityId}, { $pull : { participants : { _id : req.params.participantId }}}
+    )
+    .then(data =>{
+        res.json({ result: true, data });
+     })
+    .catch(err => console.error(err))
+})
 
 
 //Find all activities created by user
