@@ -209,8 +209,3 @@ router.get('/getActivitiesOfUser/',  (req, res) => {
 
 module.exports = router;
 
-<<<<<<< HEAD
-=======
-
-  
->>>>>>> 3f8ded6a2fa8a4308cd2cab85915f8221a7774a7
