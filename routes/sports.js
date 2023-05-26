@@ -1,16 +1,15 @@
 var express = require('express');
 var router = express.Router();
 
-
 const Sport = require('../models/sports');
 
-// GET all sports
+// Get all sports
 router.get('/', (req, res) => {
     Sport.find()
       .then(data => data ? res.json({result : true, sports : data}) : res.json({result : false}))
     });
 
-// GET sports according to search /!\ ADAPT REGEX TO AVOID SPECIAL CARACTERS(éàè)
+// Get sports according to search
 router.get('/:search', (req, res) => {
     Sport.find({name : new RegExp(req.params.search+'+', "gi")})
         .then(data => data ? res.json({result : true, sports : data}) : res.json({result : false}))

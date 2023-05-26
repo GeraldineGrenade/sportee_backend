@@ -57,11 +57,7 @@ router.get('/getConversation/:id', (req, res) => {
 router.get('/', async (req, res) => {
     try {
         const activities = await Activity.find()
-            // .populate('user')
             .populate('sport')
-        // .populate('participants.user')
-        // .populate('conversation.users')
-        // .populate('conversation.messages.user')
         res.json({ activities });
     } catch (error) {
         res.json({ error });
@@ -161,7 +157,6 @@ router.get('/getActivitiesByUser/', (req, res) => {
                                     user: { username: e.user.username, avatar: e.user.avatar, token: e.user.token },
                                 }
                             })
-
                             res.json({ result: true, activities: dataSet })
                         } else {
                             res.json({ result: false, message: 'no activities found' })
@@ -171,7 +166,6 @@ router.get('/getActivitiesByUser/', (req, res) => {
                 res.json({ result: false, message: 'user not found' })
             }
         })
-        .catch(err => console.error(err))
 })
 
 //Find all activities in which a user is participating
@@ -208,7 +202,6 @@ router.get('/getActivitiesOfUser/', (req, res) => {
                 res.json({ result: false, message: 'user not found' })
             }
         })
-        .catch(err => console.error(err))
 
 });
 

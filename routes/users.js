@@ -5,7 +5,7 @@ const bcrypt = require('bcrypt');
 
 const User = require('../models/users');
 
-// GET to verify if username is already present in DB
+//Verify if username is already present in DB
 router.get('/checkUsername/:username', (req, res) => {
   User.findOne({ username: req.params.username })
     .then(data => {
@@ -13,7 +13,7 @@ router.get('/checkUsername/:username', (req, res) => {
     })
 });
 
-// GET to verify if email is already present in DB
+// Verify if email is already present in DB
 router.get('/checkEmail/:email', (req, res) => {
   User.findOne({ email: req.params.email })
     .then(data => {

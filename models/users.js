@@ -1,7 +1,5 @@
 const mongoose =  require('mongoose');
 
-
-//TABLEAU DE SOUS-DOCUMENTS
 const preferenceSchema = mongoose.Schema({
 
     level: String,

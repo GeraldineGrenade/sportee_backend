@@ -1,7 +1,5 @@
 const mongoose = require('mongoose');
 
-//TABLEAU DE SOUS-DOCUMENTS
-
 const messageSchema = mongoose.Schema({
     user:{type:mongoose.Schema.Types.ObjectId, ref: 'users'},
     message:String,
