@@ -13,12 +13,14 @@ const pusher = new Pusher({
     cluster: "eu",
     useTLS: true
 })
+
+//RETRIEVE USER ID USING THEIR AUTHENTICATION TOKEN
 router.get('/userId/:userToken', async (req, res) => {
     const user = await User.findOne({ token: req.params.userToken })
     res.json({ userId: user._id })
 })
 
-
+//ADD NEW MSG IN CONVERSATION
 router.put("/:activityId", (req, res) => {
 
     const { message, user, timestamp } = req.body
@@ -35,18 +37,20 @@ router.put("/:activityId", (req, res) => {
         })
 })
 
+//GET THE CONVERSATION
 router.get('/getConversation/:id', (req, res) => {
     Activity.findById(req.params.id)
         .populate('conversation.messages')
         .then(data => {
             if (data) {
-                res.json({ result: true, messages: data.conversation.messages, name : data.name })
+                res.json({ result: true, messages: data.conversation.messages, name: data.name })
             } else {
                 res.json({ result: false })
             }
         })
 })
 
+//GET THE LAST MSG
 router.get('/getLastMessage/:id', (req, res) => {
     Activity.findById(req.params.id)
         .populate({
