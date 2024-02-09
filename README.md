@@ -6,7 +6,7 @@ This repository regroups the backend elements of the MVP of the SPORTEE mobile a
 To see more details about the app and how it works, checkout the frontend repository here 👉 https://github.com/GeraldineGrenade/sportee_frontend 
 
 The technical stack we chose for the app included : 
-![stackTechniqueSportee](https://github.com/GeraldineGrenade/sportee_frontend/assets/118895908/3d904e2d-58a5-45d9-93fe-90b2f94cb050)
+<img src='https://github.com/GeraldineGrenade/sportee_frontend/assets/118895908/3d904e2d-58a5-45d9-93fe-90b2f94cb050' width=700>
 
 Our database was structured as follows : 
 
