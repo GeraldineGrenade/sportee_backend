@@ -9,6 +9,7 @@ The technical stack we chose for the app included :
 ![stackTechniqueSportee](https://github.com/GeraldineGrenade/sportee_frontend/assets/118895908/3d904e2d-58a5-45d9-93fe-90b2f94cb050)
 
 Our database was structured as follows : 
+
 ![image](https://github.com/GeraldineGrenade/sportee_backend/assets/118895908/7dfc60c8-4796-4b21-9639-71c51c4178d0)
 
 
